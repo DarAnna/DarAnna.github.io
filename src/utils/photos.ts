@@ -158,6 +158,6 @@ export const getFamilyJourneyPhotos = (): Photo[] => {
 
 // Function to get card photos - select a nice subset for the card
 export const getCardPhotos = (): Photo[] => {
-  const cardPhotoIds = ['photo1', 'photo5', 'photo6', 'photo9', 'photo10', 'photo20'];
-  return photos.filter(photo => cardPhotoIds.includes(photo.id));
+  // Return all photos for the album experience
+  return photos;
 }; 

@@ -1,26 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { 
   NeuHeading, 
   NeuText, 
   NeuPrimaryButton,
-  ContentContainer,
   NeuAnimatedContainer,
   NeuCard,
-  NeuImageContainer,
-  NeuDivider,
   NeuButton,
-  NeuCircle
+  NeuCircle,
+  NeuDivider
 } from '../components/NeumorphicElements';
 import { useAppContext } from '../context/AppContext';
-import { getCardPhotos, photos, Photo } from '../utils/photos';
+import { getCardPhotos, Photo } from '../utils/photos';
 import theme from '../styles/GlobalStyles';
 
-// Inside card styled components
+// Album styled components
 const CardInsideContainer = styled(NeuAnimatedContainer)`
   width: 100%;
-  max-width: 600px;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -30,10 +28,8 @@ const CardInsideContainer = styled(NeuAnimatedContainer)`
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
   padding: 0;
   overflow: visible;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1; /* Position behind the front card */
+  position: relative;
+  z-index: 1;
 `;
 
 const CardInsideContent = styled(motion.div)`
@@ -46,6 +42,7 @@ const CardInsideContent = styled(motion.div)`
               -5px -5px 20px ${theme.colors.shadow2};
   background: linear-gradient(135deg, #f0f3f8, ${theme.colors.background});
   position: relative;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 `;
 
 const CardEdge = styled.div`
@@ -77,216 +74,239 @@ const CardInsideTitle = styled(NeuHeading)`
   }
 `;
 
-const WishesContainer = styled(NeuCard)`
-  padding: ${theme.spacing.lg};
-  margin-bottom: ${theme.spacing.lg};
-  transform: translateZ(20px);
-  box-shadow: 0 10px 15px rgba(0,0,0,0.05);
-`;
-
-const WishTitle = styled.h3`
-  font-size: 1.2rem;
-  color: ${theme.colors.primary};
-  margin-bottom: ${theme.spacing.md};
-`;
-
-const WishMessage = styled(NeuText)`
-  font-style: italic;
-  margin-bottom: ${theme.spacing.md};
-  line-height: 1.6;
-`;
-
-const WishFrom = styled.p`
-  font-weight: 600;
-  text-align: right;
-  color: ${theme.colors.secondary};
-`;
-
-const PhotoGalleryContainer = styled.div`
-  margin-top: ${theme.spacing.lg};
-  transform: translateZ(10px);
-`;
-
-const GalleryTitle = styled(NeuHeading)`
-  font-size: 1.5rem;
-  margin-bottom: ${theme.spacing.md};
-  text-align: center;
-`;
-
-const PhotoGrid = styled.div`
+const AlbumGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: ${theme.spacing.md};
-  
-  @media (min-width: ${theme.breakpoints.tablet}) {
-    grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: ${theme.spacing.lg};
+  margin-top: ${theme.spacing.md};
+  margin-bottom: ${theme.spacing.md};
+  position: relative;
+
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: ${theme.spacing.md};
   }
 `;
 
-const PhotoItem = styled(motion.div)`
-  aspect-ratio: 1 / 1;
+const PhotoFrame = styled(motion.div)`
+  position: relative;
+  padding: 10px;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
   cursor: pointer;
-  border-radius: ${theme.borderRadius.medium};
-  background-color: ${theme.colors.background};
-  box-shadow: 5px 5px 10px ${theme.colors.shadow1}, 
-              -5px -5px 10px ${theme.colors.shadow2};
-  overflow: hidden;
-  transform: translateZ(25px);
   
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    pointer-events: none;
   }
-  
-  &:hover img {
-    transform: scale(1.05);
+
+  &:hover {
+    transform: scale(1.02) rotate(1deg);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   }
 `;
 
-const PhotoModal = styled(motion.div)`
+const PhotoImage = styled.img`
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    height: 130px;
+  }
+`;
+
+const PhotoTape = styled.div`
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.7);
+  height: 20px;
+  width: 40px;
+  top: -5px;
+  left: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+`;
+
+const PhotoDate = styled.div`
+  position: absolute;
+  bottom: 5px;
+  right: 15px;
+  font-size: 0.7rem;
+  font-family: 'Courier New', monospace;
+  color: rgba(0, 0, 0, 0.5);
+  transform: rotate(-3deg);
+`;
+
+const PhotoCaption = styled.div`
+  font-size: 0.85rem;
+  font-family: 'Courier New', monospace;
+  margin-top: 8px;
+  text-align: center;
+  color: ${theme.colors.text};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 5px;
+`;
+
+const IconScattered = styled(motion.div)`
+  position: absolute;
+  font-size: 1.5rem;
+  color: ${props => props.color || theme.colors.primary};
+  opacity: 0.6;
+  z-index: 1;
+  user-select: none;
+`;
+
+const WishModalOverlay = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 100;
   padding: ${theme.spacing.lg};
 `;
 
-const ModalContent = styled(motion.div)`
-  position: relative;
-  max-width: 90%;
-  max-height: 90%;
-  background-color: ${theme.colors.background};
+const WishModalContent = styled(motion.div)`
+  background: ${theme.colors.background};
   border-radius: ${theme.borderRadius.large};
+  padding: ${theme.spacing.xl};
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
 `;
 
-const ModalImage = styled.img`
-  display: block;
+const WishModalImageContainer = styled.div`
+  margin: -${theme.spacing.xl};
+  margin-bottom: ${theme.spacing.lg};
+  overflow: hidden;
+  border-radius: ${theme.borderRadius.large} ${theme.borderRadius.large} 0 0;
+  height: 200px;
+`;
+
+const WishModalImage = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+`;
+
+const WishModalMessage = styled.div`
+  margin-top: ${theme.spacing.lg};
+  margin-bottom: ${theme.spacing.xl};
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: ${theme.colors.text};
+  flex: 1;
+  overflow-y: auto;
+  padding-right: ${theme.spacing.sm};
+  
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+  }
+`;
+
+const WishModalFrom = styled.div`
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: ${theme.colors.primary};
+  margin-bottom: ${theme.spacing.md};
 `;
 
 const CloseButton = styled(NeuCircle)`
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 16px;
+  right: 16px;
   width: 40px;
   height: 40px;
-  cursor: pointer;
-  z-index: 101;
-  
-  &::before, &::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 2px;
-    background-color: ${theme.colors.primary};
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(45deg);
-  }
-  
-  &::after {
-    transform: translate(-50%, -50%) rotate(-45deg);
-  }
-`;
-
-const PhotoInfo = styled.div`
-  padding: ${theme.spacing.md};
-  background-color: ${theme.colors.background};
-  
-  h3 {
-    color: ${theme.colors.primary};
-    margin-bottom: ${theme.spacing.xs};
-  }
-  
-  p {
-    color: ${theme.colors.text};
-    font-size: 0.9rem;
-  }
-`;
-
-const NavButtons = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-top: ${theme.spacing.xl};
-  transform: translateZ(15px);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: ${theme.colors.text};
+  font-size: 1.2rem;
+  z-index: 10;
+  
+  &::before {
+    content: '×';
+    font-size: 24px;
+  }
 `;
 
-// Define the props interface for ConfettiItem
-interface ConfettiItemProps {
-  x: string;
-  y: string;
-  rotate: number;
-  color: string;
-}
-
-const ConfettiItem = styled.div<ConfettiItemProps>`
+const IconContainer = styled.div`
   position: absolute;
-  width: 8px;
-  height: 8px;
-  background-color: ${props => props.color || theme.colors.primary};
-  border-radius: 50%;
-  opacity: 0.7;
-  z-index: 0;
-  transform: ${props => `translate(${props.x}, ${props.y}) rotate(${props.rotate}deg)`};
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  overflow: hidden;
 `;
 
-interface MessageProps {
-  from: string;
-  message: string;
-}
+// Define dad-related icons
+const dadIcons = [
+  '⚽', '🎣', '🎬', '🛠️', '🔧', '📚', '🎵', '🎹', '📱', '⌚', '💼', '🧗‍♂️', 
+  '🚗', '🌍', '🏠', '☕', '🍕', '🧠', '❤️', '🎮', '🖥️', '📷', '🎤', '🎂', '🎉'
+];
 
-// Array of wishes from family members
-const familyWishes: MessageProps[] = [
+// Define placeholder wishes
+const wishes = [
   {
-    from: "Your son",
-    message: "Dad, you've always been my role model and inspiration. Your dedication to work and family shows me what it means to be a great man. Happy Birthday!"
+    from: 'Mom',
+    message: "Happy birthday to the most wonderful husband and father! You make our family complete with your love, wisdom, and those terrible dad jokes that we secretly love. Wishing you all the happiness in the world today and always."
   },
   {
-    from: "Your oldest daughter",
-    message: "Thank you for always supporting my dreams, even when they took me far from home. Your strength and wisdom guide me every day. Love you, папа!"
+    from: 'Sister',
+    message: "Big bro! Can't believe you're another year older (and hopefully wiser!). Thanks for always being there for me and setting such a great example. You're the best brother anyone could ask for. Happy birthday!"
   },
   {
-    from: "Your youngest children",
-    message: "We miss you so much when you're far away, but we're so proud of you and everything you do! Can't wait for our next family adventure. Happy Birthday!"
+    from: 'Brother',
+    message: "Happy birthday to my awesome brother who taught me everything I know about persistence and hard work. You've always been my role model. Enjoy your special day, you deserve it!"
   },
   {
-    from: "Your family in Canada",
-    message: "Distance may separate us, but family bonds remain strong. Thinking of you on your special day. Remember our childhood adventures? Happy Birthday, brother!"
+    from: 'Grandma',
+    message: "My dearest grandson, watching you grow into the man you are today has been one of my greatest joys. Your kindness and strength remind me so much of your grandfather. Sending you all my love on your birthday."
+  },
+  {
+    from: 'Cousin Sarah',
+    message: "Happy birthday to my favorite cousin! Remember all those summer adventures we had as kids? Those are still some of my favorite memories. Hope your day is filled with as much fun as those summers were!"
+  },
+  {
+    from: 'Uncle Jim',
+    message: "Happy birthday, nephew! It's been a privilege watching you grow up into the man you've become. Your dedication to your family reminds me of your father. Wishing you continued success and happiness in the coming year."
+  },
+  {
+    from: 'Aunt Mary',
+    message: "Happy birthday to my wonderful nephew! Your positivity and energy always light up the room. You've grown into such a thoughtful and caring person. Enjoy your special day!"
+  },
+  {
+    from: 'Childhood Friend',
+    message: "We've been friends since we were little tykes, and I've watched you grow into an amazing father and husband. So proud to call you my friend. Happy birthday, buddy!"
   }
 ];
 
-// Generate confetti positions
-const generateConfetti = (count: number) => {
-  const confetti = [];
-  const colors = [theme.colors.primary, theme.colors.secondary, theme.colors.accent];
-  
-  for (let i = 0; i < count; i++) {
-    confetti.push({
-      id: i,
-      x: Math.random() * 100 + '%',
-      y: Math.random() * 100 + '%',
-      rotate: Math.random() * 360,
-      color: colors[Math.floor(Math.random() * colors.length)]
-    });
-  }
-  
-  return confetti;
-};
-
-// Define props interface
 interface CardInsideProps {
   isVisible: boolean;
   onClose: () => void;
@@ -294,223 +314,159 @@ interface CardInsideProps {
 
 const CardInside: React.FC<CardInsideProps> = ({ isVisible, onClose }) => {
   const { state } = useAppContext();
-  const cardPhotos = getCardPhotos();
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
-  const [currentWishIndex, setCurrentWishIndex] = useState(0);
-  const [confetti] = useState(generateConfetti(20));
+  const [currentWish, setCurrentWish] = useState<typeof wishes[0] | null>(null);
+  const photos = getCardPhotos();
+  const controls = useAnimation();
   
-  // Handle photo click
-  const handlePhotoClick = (photo: Photo) => {
-    setSelectedPhoto(photo);
+  // Randomly place icons across the album
+  const generateIcons = () => {
+    const icons = [];
+    const iconCount = 12;
+    
+    for (let i = 0; i < iconCount; i++) {
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+      const rotation = Math.random() * 60 - 30;
+      const icon = dadIcons[Math.floor(Math.random() * dadIcons.length)];
+      const delay = Math.random() * 0.5;
+      const color = `hsl(${Math.random() * 60 + 180}, 70%, 60%)`;
+      
+      icons.push(
+        <IconScattered 
+          key={i}
+          style={{ 
+            top: `${y}%`, 
+            left: `${x}%`, 
+            transform: `rotate(${rotation}deg)`,
+            color 
+          }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 0.6, scale: 1 }}
+          transition={{ delay, duration: 0.4 }}
+        >
+          {icon}
+        </IconScattered>
+      );
+    }
+    
+    return icons;
   };
   
-  // Close modal
+  const openWishModal = (photo: Photo) => {
+    setSelectedPhoto(photo);
+    // Randomly select a wish to display
+    const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+    setCurrentWish(randomWish);
+  };
+  
   const closeModal = () => {
     setSelectedPhoto(null);
+    setCurrentWish(null);
   };
   
-  // Change wish
-  const cycleWish = () => {
-    setCurrentWishIndex((prev) => (prev + 1) % familyWishes.length);
+  // Render each photo with a vintage photo frame look
+  const renderPhoto = (photo: Photo, index: number) => {
+    const delay = index * 0.08;
+    const rotation = Math.random() * 6 - 3;
+    const tapeRotation = Math.random() * 10 - 5;
+    
+    return (
+      <PhotoFrame
+        key={photo.id}
+        style={{ transform: `rotate(${rotation}deg)` }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay, duration: 0.4 }}
+        onClick={() => openWishModal(photo)}
+        whileHover={{ 
+          y: -5,
+          transition: { duration: 0.2 } 
+        }}
+      >
+        <PhotoTape style={{ transform: `translateX(-50%) rotate(${tapeRotation}deg)` }} />
+        <PhotoImage src={photo.src} alt={photo.title} />
+        <PhotoCaption>{photo.title}</PhotoCaption>
+        {photo.year && <PhotoDate>{photo.year}</PhotoDate>}
+      </PhotoFrame>
+    );
   };
   
   useEffect(() => {
-    // Auto-cycle wishes every 10 seconds
-    const interval = setInterval(cycleWish, 10000);
-    return () => clearInterval(interval);
-  }, []);
-  
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { 
-        duration: 0.8,
-        when: "beforeChildren",
-        staggerChildren: 0.2
-      }
-    },
-    exit: { 
-      opacity: 0,
-      y: -50,
-      transition: { duration: 0.4 }
+    if (isVisible) {
+      controls.start("visible");
     }
-  };
-
-  const cardVariants = {
-    initial: { opacity: 0 },
-    animate: { 
-      opacity: 1,
-      transition: { 
-        duration: 0.8,
-        delay: 0.5
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 100
-      }
-    }
-  };
-  
-  // Modal animation variants
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { 
-      opacity: 1, 
-      scale: 1,
-      transition: { 
-        duration: 0.3 
-      }
-    },
-    exit: { 
-      opacity: 0,
-      scale: 0.8,
-      transition: { duration: 0.3 }
-    }
-  };
-  
-  // Wish animation variants
-  const wishVariants = {
-    enter: { opacity: 0, y: 20 },
-    center: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 }
-  };
+  }, [isVisible, controls]);
   
   return (
-    <ContentContainer>
-      <CardInsideContainer
-        variants={containerVariants}
-        initial="hidden"
-        animate={isVisible ? "visible" : "hidden"}
-        exit="exit"
-      >
-        <CardInsideContent
-          variants={cardVariants}
-          initial="initial"
-          animate={isVisible ? "animate" : "initial"}
+    <CardInsideContainer
+      initial="hidden"
+      animate={controls}
+      exit="hidden"
+      variants={{
+        visible: { opacity: 1, rotateY: 0, transition: { duration: 0.8 } },
+        hidden: { opacity: 0, rotateY: 90, transition: { duration: 0.4 } }
+      }}
+      style={{ display: isVisible ? 'flex' : 'none' }}
+    >
+      <CardInsideContent>
+        <CardEdge />
+        
+        <CardInsideTitle>Dad's Memory Album</CardInsideTitle>
+        <NeuText style={{ textAlign: 'center', marginBottom: theme.spacing.sm }}>
+          Click on any photo to see birthday wishes!
+        </NeuText>
+        
+        <IconContainer>
+          {generateIcons()}
+        </IconContainer>
+        
+        <AlbumGrid>
+          {photos.map(renderPhoto)}
+        </AlbumGrid>
+        
+        <NeuButton 
+          onClick={onClose}
+          style={{ margin: '0 auto', marginTop: theme.spacing.md }}
         >
-          <CardEdge />
-          
-          {/* Confetti decoration */}
-          {confetti.map(item => (
-            <ConfettiItem 
-              key={item.id}
-              x={item.x} 
-              y={item.y} 
-              rotate={item.rotate}
-              color={item.color}
-            />
-          ))}
-          
-          <motion.div variants={itemVariants}>
-            <CardInsideTitle>Happy Birthday to Someone Special</CardInsideTitle>
-          </motion.div>
-          
-          <motion.div variants={itemVariants}>
-            <WishesContainer>
-              <WishTitle>Birthday Wishes</WishTitle>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentWishIndex}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  variants={wishVariants}
-                  transition={{ duration: 0.5 }}
-                >
-                  <WishMessage>"{familyWishes[currentWishIndex].message}"</WishMessage>
-                  <WishFrom>- {familyWishes[currentWishIndex].from}</WishFrom>
-                </motion.div>
-              </AnimatePresence>
-            </WishesContainer>
-          </motion.div>
-          
-          <NeuDivider />
-          
-          <motion.div variants={itemVariants}>
-            <PhotoGalleryContainer>
-              <GalleryTitle>Family Memories</GalleryTitle>
-              <PhotoGrid>
-                {cardPhotos.map((photo) => (
-                  <PhotoItem 
-                    key={photo.id}
-                    onClick={() => handlePhotoClick(photo)}
-                    whileHover={{ scale: 1.03, z: 30 }}
-                    whileTap={{ scale: 0.97 }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <img src={photo.src} alt={photo.title} />
-                  </PhotoItem>
-                ))}
-              </PhotoGrid>
-            </PhotoGalleryContainer>
-          </motion.div>
-          
-          <motion.div variants={itemVariants}>
-            <NeuCard>
-              <NeuText>
-                From all of us to you, we wish you a day filled with joy, happiness, and love.
-                Though we're scattered across different countries, our hearts are together.
-                Thank you for being an amazing father, brother, doctor, and friend.
-              </NeuText>
-              <NeuText>
-                Your dedication to family and work is truly inspiring.
-                Here's to another wonderful year!
-              </NeuText>
-            </NeuCard>
-          </motion.div>
-          
-          <NavButtons>
-            <NeuButton onClick={cycleWish}>
-              Next Message
-            </NeuButton>
-            <NeuPrimaryButton onClick={onClose}>
-              Close Card
-            </NeuPrimaryButton>
-          </NavButtons>
-        </CardInsideContent>
-      </CardInsideContainer>
+          Return to Card
+        </NeuButton>
+      </CardInsideContent>
       
-      {/* Photo Modal */}
       <AnimatePresence>
-        {selectedPhoto && (
-          <PhotoModal
+        {selectedPhoto && currentWish && (
+          <WishModalOverlay
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeModal}
           >
-            <ModalContent
-              variants={modalVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
+            <WishModalContent
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <ModalImage src={selectedPhoto.src} alt={selectedPhoto.title} />
-              <PhotoInfo>
-                <h3>{selectedPhoto.title}</h3>
-                <p>{selectedPhoto.description}</p>
-                {selectedPhoto.year && <p>Year: {selectedPhoto.year}</p>}
-              </PhotoInfo>
-            </ModalContent>
-            <CloseButton onClick={closeModal} />
-          </PhotoModal>
+              <WishModalImageContainer>
+                <WishModalImage src={selectedPhoto.src} alt={selectedPhoto.title} />
+              </WishModalImageContainer>
+              
+              <CloseButton onClick={closeModal} />
+              
+              <WishModalFrom>From {currentWish.from}:</WishModalFrom>
+              <WishModalMessage>{currentWish.message}</WishModalMessage>
+              
+              <NeuDivider style={{ margin: `${theme.spacing.md} 0` }} />
+              
+              <NeuPrimaryButton onClick={closeModal}>
+                Back to Album
+              </NeuPrimaryButton>
+            </WishModalContent>
+          </WishModalOverlay>
         )}
       </AnimatePresence>
-    </ContentContainer>
+    </CardInsideContainer>
   );
 };
 

@@ -153,6 +153,44 @@ interface JourneyLocation {
   isFlight?: boolean;
 }
 
+// Define interfaces for the filter components
+interface MapPointProps {
+  active: boolean;
+  style?: React.CSSProperties;
+  onClick?: () => void;
+  whileHover?: any;
+  animate?: any;
+  transition?: any;
+  [key: string]: any; // For any other props
+}
+
+interface MapLineProps {
+  active: boolean;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  initial?: any;
+  animate?: any;
+  transition?: any;
+  [key: string]: any; // For any other props
+}
+
+// Modify where the components are used - create a component to filter props for MapPoint
+const FilteredMapPoint: React.FC<MapPointProps> = ({ active, ...rest }) => {
+  return <MapPoint data-active={active ? "true" : "false"} {...rest} />;
+};
+
+// Modify where the components are used - create a component to filter props for MapLine
+const FilteredMapLine: React.FC<MapLineProps> = ({ active, x1, y1, x2, y2, ...rest }) => {
+  return <MapLine data-active={active ? "true" : "false"} x1={x1} y1={y1} x2={x2} y2={y2} {...rest} />;
+};
+
+// Modify where the components are used - create a component to filter props for MapFlightLine
+const FilteredMapFlightLine: React.FC<MapLineProps> = ({ active, x1, y1, x2, y2, ...rest }) => {
+  return <MapFlightLine data-active={active ? "true" : "false"} x1={x1} y1={y1} x2={x2} y2={y2} {...rest} />;
+};
+
 const MapJourney: React.FC = () => {
   const { completePuzzle2 } = useAppContext();
   const navigate = useNavigate();
@@ -286,7 +324,7 @@ const MapJourney: React.FC = () => {
               // Determine if it's a flight path
               if (nextLocation.isFlight) {
                 return (
-                  <MapFlightLine
+                  <FilteredMapFlightLine
                     key={`flight-${location.id}-${nextLocation.id}`}
                     x1={location.x}
                     y1={location.y}
@@ -304,7 +342,7 @@ const MapJourney: React.FC = () => {
               }
               
               return (
-                <MapLine
+                <FilteredMapLine
                   key={`line-${location.id}-${nextLocation.id}`}
                   x1={location.x}
                   y1={location.y}
@@ -328,7 +366,7 @@ const MapJourney: React.FC = () => {
               
               return (
                 <React.Fragment key={location.id}>
-                  <MapPoint 
+                  <FilteredMapPoint 
                     style={{ left: location.x, top: location.y }}
                     active={isActive}
                     onClick={() => handleLocationClick(index)}
