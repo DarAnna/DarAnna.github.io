@@ -30,6 +30,15 @@ const CardInsideContainer = styled(NeuAnimatedContainer)`
   overflow: visible;
   position: relative;
   z-index: 1;
+  
+  /* Ensure content is scrollable on mobile */
+  max-height: 100%;
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    overflow-y: auto;
+    height: 100vh;
+    padding-bottom: 20px;
+  }
 `;
 
 const CardInsideContent = styled(motion.div)`
@@ -43,6 +52,11 @@ const CardInsideContent = styled(motion.div)`
   background: linear-gradient(135deg, #f0f3f8, ${theme.colors.background});
   position: relative;
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  
+  @media (max-width: ${theme.breakpoints.mobile}) {
+    min-height: auto;
+    overflow: visible;
+  }
 `;
 
 const CardEdge = styled.div`
@@ -85,6 +99,7 @@ const AlbumGrid = styled.div`
   @media (max-width: ${theme.breakpoints.mobile}) {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: ${theme.spacing.md};
+    margin-bottom: ${theme.spacing.xl}; /* Add more space at the bottom for mobile */
   }
 `;
 
@@ -155,15 +170,6 @@ const PhotoCaption = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0 5px;
-`;
-
-const IconScattered = styled(motion.div)`
-  position: absolute;
-  font-size: 1.5rem;
-  color: ${props => props.color || theme.colors.primary};
-  opacity: 0.6;
-  z-index: 1;
-  user-select: none;
 `;
 
 const WishModalOverlay = styled(motion.div)`
@@ -255,22 +261,6 @@ const CloseButton = styled(NeuCircle)`
   }
 `;
 
-const IconContainer = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  overflow: hidden;
-`;
-
-// Define dad-related icons
-const dadIcons = [
-  '⚽', '🎣', '🎬', '🛠️', '🔧', '📚', '🎵', '🎹', '📱', '⌚', '💼', '🧗‍♂️', 
-  '🚗', '🌍', '🏠', '☕', '🍕', '🧠', '❤️', '🎮', '🖥️', '📷', '🎤', '🎂', '🎉'
-];
-
 // Define placeholder wishes
 const wishes = [
   {
@@ -318,40 +308,6 @@ const CardInside: React.FC<CardInsideProps> = ({ isVisible, onClose }) => {
   const [currentWish, setCurrentWish] = useState<typeof wishes[0] | null>(null);
   const photos = getCardPhotos();
   const controls = useAnimation();
-  
-  // Randomly place icons across the album
-  const generateIcons = () => {
-    const icons = [];
-    const iconCount = 12;
-    
-    for (let i = 0; i < iconCount; i++) {
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
-      const rotation = Math.random() * 60 - 30;
-      const icon = dadIcons[Math.floor(Math.random() * dadIcons.length)];
-      const delay = Math.random() * 0.5;
-      const color = `hsl(${Math.random() * 60 + 180}, 70%, 60%)`;
-      
-      icons.push(
-        <IconScattered 
-          key={i}
-          style={{ 
-            top: `${y}%`, 
-            left: `${x}%`, 
-            transform: `rotate(${rotation}deg)`,
-            color 
-          }}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 0.6, scale: 1 }}
-          transition={{ delay, duration: 0.4 }}
-        >
-          {icon}
-        </IconScattered>
-      );
-    }
-    
-    return icons;
-  };
   
   const openWishModal = (photo: Photo) => {
     setSelectedPhoto(photo);
@@ -416,10 +372,6 @@ const CardInside: React.FC<CardInsideProps> = ({ isVisible, onClose }) => {
         <NeuText style={{ textAlign: 'center', marginBottom: theme.spacing.sm }}>
           Click on any photo to see birthday wishes!
         </NeuText>
-        
-        <IconContainer>
-          {generateIcons()}
-        </IconContainer>
         
         <AlbumGrid>
           {photos.map(renderPhoto)}

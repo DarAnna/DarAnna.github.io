@@ -30,7 +30,7 @@ export const photos: Photo[] = [
   },
   {
     id: 'photo4',
-    src: getImagePath('with_me_theather.heic'),
+    src: getImagePath('with_me_theather.jpg'),
     title: 'Theater Visit',
     description: 'At the theater together',
   },

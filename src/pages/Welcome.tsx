@@ -41,17 +41,40 @@ const StyledForm = styled.form`
   width: 100%;
 `;
 
+const HintText = styled(NeuText)`
+  color: ${theme.colors.text};
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: ${theme.spacing.sm};
+`;
+
+const ErrorText = styled(motion.div)`
+  color: #e74c3c;
+  font-size: 0.9rem;
+  margin-top: ${theme.spacing.sm};
+  height: 20px;
+`;
+
 const Welcome: React.FC = () => {
-  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const { setUserName, advanceStage } = useAppContext();
   const navigate = useNavigate();
 
+  const CORRECT_PASSWORD = '1999200120092012';
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim()) {
-      setUserName(name);
+    
+    if (password === CORRECT_PASSWORD) {
+      setError('');
+      setUserName('Dad'); // Still setting a name for the rest of the app
       advanceStage();
       navigate('/puzzle');
+    } else {
+      setError('Hmm, that doesn\'t seem right. Try again!');
+      // Shake animation will be triggered by key change
+      setPassword('');
     }
   };
 
@@ -79,6 +102,19 @@ const Welcome: React.FC = () => {
     visible: { opacity: 1, y: 0 }
   };
 
+  const errorVariants = {
+    initial: { opacity: 0, y: -10 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0 }
+  };
+
+  const shakeVariants = {
+    shake: {
+      x: [0, -10, 10, -10, 10, 0],
+      transition: { duration: 0.4 }
+    }
+  };
+
   return (
     <ContentContainer>
       <WelcomeContainer
@@ -94,21 +130,52 @@ const Welcome: React.FC = () => {
         <motion.div variants={itemVariants}>
           <NeuText>
             Welcome to your personalized birthday experience.
-            To start your journey, I need to know who you are...
+            Before you can continue, you need to solve a little puzzle...
           </NeuText>
+        </motion.div>
+
+        <motion.div variants={itemVariants}>
+          <NeuCard style={{ padding: theme.spacing.md, marginTop: theme.spacing.md }}>
+            <NeuText>
+              <strong>Enter the birth years of all your children from oldest to youngest</strong>
+            </NeuText>
+            <HintText>
+              Hint: Just the years, no spaces or separators (e.g., 19992001...)
+            </HintText>
+          </NeuCard>
         </motion.div>
         
         <StyledForm onSubmit={handleSubmit}>
           <motion.div variants={itemVariants} style={{ width: '100%' }}>
             <InputGroup>
-              <NeuInput
-                type="text"
-                placeholder="Your name..."
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
+              <motion.div
+                animate={error ? "shake" : ""}
+                variants={shakeVariants}
+                style={{ width: '100%' }}
+              >
+                <NeuInput
+                  type="password"
+                  placeholder="Enter the years..."
+                  value={password}
+                  onChange={(e) => {
+                    // Only allow numbers
+                    const value = e.target.value.replace(/[^0-9]/g, '');
+                    setPassword(value);
+                    if (error) setError('');
+                  }}
+                  required
+                />
+              </motion.div>
             </InputGroup>
+            <ErrorText
+              key={error} // This causes a re-render and animation when error changes
+              variants={errorVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              {error}
+            </ErrorText>
           </motion.div>
           
           <motion.div 
@@ -117,7 +184,7 @@ const Welcome: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <NeuPrimaryButton type="submit">
-              Let's Begin
+              Unlock
             </NeuPrimaryButton>
           </motion.div>
         </StyledForm>
