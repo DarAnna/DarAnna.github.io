@@ -205,7 +205,7 @@ const MapJourney: React.FC = () => {
       name: 'Kyiv',
       x: 75,
       y: 100,
-      description: 'Home in Kyiv - where the journey begins. The clinic has helped bring 10,000 children into the world.',
+      description: 'Початок доооовгої дороги. І місто, де живе твоя пʼята дитина 🏥',
       distanceInHours: 0
     },
     {
@@ -213,31 +213,31 @@ const MapJourney: React.FC = () => {
       name: 'Dessau',
       x: 200,
       y: 170,
-      description: 'Dessau, Germany - where two of your children live. A long trip, but always worth it.',
-      distanceInHours: 20
+      description: 'Дессау, Німеччина - тут тебе чекають дуже багато людей! Довга дорога, але це варто того!',
+      distanceInHours: 24
     },
     {
       id: 'nuremberg',
       name: 'Nuremberg',
       x: 190,
       y: 230,
-      description: 'Nuremberg - where your son lives. Always studying and working hard, just like his father.',
-      distanceInHours: 24
+      description: 'Нюрнберг - заїжджай на тренування до головного танцора родини!',
+      distanceInHours: 30
     },
     {
       id: 'munich',
       name: 'Munich',
       x: 180,
       y: 280,
-      description: 'Munich - where your oldest child in Germany lives. The family is scattered, but the connections remain strong.',
-      distanceInHours: 30
+      description: 'Мюнхен - остання локація в Європі. Оце нас розкидало по світу! Зато не скучно і тебе скрізь чекають!',
+      distanceInHours: 31
     },
     {
       id: 'toronto',
       name: 'Toronto',
       x: 90,
       y: 200,
-      description: 'Toronto, Canada - crossing the ocean to visit your family overseas. A beautiful city with lots of opportunities.',
+      description: 'Торонто - нічого собі, тебе і тут чекають)) ',
       distanceInHours: 39,
       isFlight: true
     }
@@ -303,14 +303,14 @@ const MapJourney: React.FC = () => {
         </DevSkipButton>
         
         <motion.div variants={itemVariants}>
-          <NeuHeading>The Journey to Family</NeuHeading>
+          <NeuHeading>Подорож до сім'ї</NeuHeading>
         </motion.div>
         
         <motion.div variants={itemVariants}>
           <NeuText>
             {isRouteComplete 
-              ? "You've completed the journey! Family is always worth the trip, no matter the distance." 
-              : "Trace the route you take to visit your family around the world. Click each location in order."}
+              ? "Ти пройшов цей шлях! Родина завжди варта цієї подорожі, незважаючи на відстань." 
+              : "Ти майже досяг цілі! Але спочатку тобі треба помандрувати твоєю довгою дорогою, якою ти проїжджаєш аби побачитись з усією родиною! Нажми на кожну точку на карті, щоб пройти цей шлях."}
           </NeuText>
         </motion.div>
         
@@ -390,15 +390,8 @@ const MapJourney: React.FC = () => {
         
         <motion.div variants={itemVariants}>
           <TripInfo>
-            <h3>Current Location: {locations[activeLocationIndex].name}</h3>
+            <h3>Твоя локація: {locations[activeLocationIndex].name}</h3>
             <p>{locations[activeLocationIndex].description}</p>
-            {activeLocationIndex > 0 && (
-              <p>
-                <strong>Trip from {activeLocationIndex > 0 ? 'Kyiv' : ''}:</strong> Approximately {locations[activeLocationIndex].distanceInHours} hours 
-                {locations[activeLocationIndex].isFlight ? ' by flight' : ' by car'}. 
-                {locations[activeLocationIndex].isFlight ? ' A long flight across the ocean, but worth it to see family.' : ' A long journey, but family makes it worthwhile.'}
-              </p>
-            )}
           </TripInfo>
         </motion.div>
         
@@ -411,7 +404,7 @@ const MapJourney: React.FC = () => {
           >
             <ButtonGroup>
               <NeuPrimaryButton onClick={handleContinue}>
-                Open Birthday Card
+                Нарешті до листівки
               </NeuPrimaryButton>
             </ButtonGroup>
           </motion.div>

@@ -235,14 +235,14 @@ const PhotoPuzzle: React.FC = () => {
         </DevSkipButton>
         
         <motion.div variants={itemVariants}>
-          <NeuHeading>Photo Puzzle Challenge</NeuHeading>
+          <NeuHeading>Фотопазл</NeuHeading>
         </motion.div>
         
         <motion.div variants={itemVariants}>
           <NeuText>
             {isPuzzleComplete 
-              ? "Great job! You've completed the puzzle!" 
-              : "Arrange the pieces to complete the family photo. Select two pieces to swap them."}
+              ? "Супер! Ти склав пазл!" 
+              : "Все не так просто! Тепер склади частинки пазла аби отримати ціле фото! Обери спочатку одну частинку і потім другу, щоб поміняти їх місцями"}
           </NeuText>
         </motion.div>
         

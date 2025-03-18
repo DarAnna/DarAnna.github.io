@@ -13,55 +13,56 @@ export const photos: Photo[] = [
   {
     id: 'photo1',
     src: getImagePath('photoshoot_group_with_grandma.JPG'),
-    title: 'Family Photoshoot',
+    title: 'Вся родина',
     description: 'The whole family together with grandma',
   },
   {
     id: 'photo2',
     src: getImagePath('photoshoot_at_the_table.JPG'),
-    title: 'Around the Table',
+    title: 'Піцца це святе!',
     description: 'Family moment at the dinner table',
   },
   {
     id: 'photo3',
     src: getImagePath('in_front_of_school.JPG'),
-    title: 'School Days',
+    title: 'Вчитись і вчитись',
     description: 'In front of the school building',
   },
   {
     id: 'photo4',
     src: getImagePath('with_me_theather.jpg'),
-    title: 'Theater Visit',
+    title: 'Культурна родина',
     description: 'At the theater together',
+    year: '2024'
   },
   {
     id: 'photo5',
     src: getImagePath('entire_family_cousins_rome.jpg'),
-    title: 'Rome Family Trip',
+    title: 'Риииииим',
     description: 'The extended family in Rome',
   },
   {
     id: 'photo6',
     src: getImagePath('with_kids_egypt.jpg'),
-    title: 'Egyptian Adventure',
+    title: 'Новорічний Єгипет',
     description: 'Family trip to Egypt',
   },
   {
     id: 'photo7',
     src: getImagePath('photoshoot_with_kids_on_steps.JPG'),
-    title: 'Steps Photoshoot',
+    title: 'Сходи до успіху))',
     description: 'With the kids on the steps',
   },
   {
     id: 'photo8',
     src: getImagePath('photoshoot_kids_dad_on_the_phone_as_always.JPG'),
-    title: 'Dad on the Phone',
+    title: 'Тато як завжди',
     description: 'Classic moment - dad on the phone during family photos',
   },
   {
     id: 'photo9',
     src: getImagePath('photoshoot_with_daughters.JPG'),
-    title: 'With Daughters',
+    title: 'Татові принцеси',
     description: 'Dad with his daughters',
   },
   {
@@ -73,69 +74,67 @@ export const photos: Photo[] = [
   {
     id: 'photo11',
     src: getImagePath('photoshoot_the_two_of_us.JPG'),
-    title: 'The Two of Us',
+    title: 'Татова принцеса',
     description: 'Special father-child moment',
   },
   {
     id: 'photo12',
     src: getImagePath('me_filming_him_for_work.jpg'),
-    title: 'Filming Dad',
+    title: 'Професійна зйомка',
     description: 'Helping dad with work recording',
   },
   {
     id: 'photo13',
     src: getImagePath('at_my_brothers_graduation.JPG'),
-    title: 'Graduation Day',
+    title: 'Випускник',
     description: 'At brother\'s graduation ceremony',
     year: '2019'
   },
   {
     id: 'photo14',
     src: getImagePath('old_my_brothers_first_grade.jpg'),
-    title: 'First Grade',
+    title: 'Перше вересня',
     description: 'Brother\'s first day of school',
-    year: '2010'
+    year: '2009'
   },
   {
     id: 'photo15',
     src: getImagePath('my_19_birthday_with_siblings.JPG'),
-    title: '19th Birthday',
+    title: '19 років',
     description: 'Celebrating with siblings',
-    year: '2020'
+    year: '2018'
   },
   {
     id: 'photo16',
     src: getImagePath('old_school_photo.JPG'),
-    title: 'Old School Photo',
+    title: 'І знову школа',
     description: 'Classic school picture from years ago',
-    year: '2005'
   },
   {
     id: 'photo17',
     src: getImagePath('school_photo.jpg'),
-    title: 'School Portrait',
+    title: 'Іііі знову школа',
     description: 'Recent school photo',
     year: '2018'
   },
   {
     id: 'photo18',
     src: getImagePath('funnt_selfie_with_bunny_ears.JPG'),
-    title: 'Bunny Ears',
+    title: 'Папа - зайчик',
     description: 'Funny selfie with bunny ears filter',
   },
   {
     id: 'photo19',
     src: getImagePath('old_easter_church_with_grandma.JPG'),
-    title: 'Easter at Church',
+    title: 'Родинний Великдень',
     description: 'Easter celebration at church with grandma',
-    year: '2008'
   },
   {
     id: 'photo20',
     src: getImagePath('my_graduation.JPG'),
-    title: 'Graduation Day',
+    title: 'Випускник',
     description: 'At my graduation ceremony',
-    year: '2022'
+    year: '2017'
   }
 ];
 

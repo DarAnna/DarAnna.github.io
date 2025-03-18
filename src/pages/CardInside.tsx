@@ -264,36 +264,48 @@ const CloseButton = styled(NeuCircle)`
 // Define placeholder wishes
 const wishes = [
   {
-    from: 'Mom',
-    message: "Happy birthday to the most wonderful husband and father! You make our family complete with your love, wisdom, and those terrible dad jokes that we secretly love. Wishing you all the happiness in the world today and always."
+    from: 'Макс',
+    message: "Поздравляю с днем рождения!! Желаю крепкого здоровья, побольше совместных счастливых моментов и чтобы всей нашей семье сопутствовала удача. Спасибо за постоянную поддержку и заботу. Любим! P.S Яхта не за горами🛥️"
   },
   {
-    from: 'Sister',
-    message: "Big bro! Can't believe you're another year older (and hopefully wiser!). Thanks for always being there for me and setting such a great example. You're the best brother anyone could ask for. Happy birthday!"
+    from: 'Валерия',
+    message: "Я очень рада познакомиться с Вами и Вашей семьей. Вы поистине являетесь примером силы, мудрости и стойкости. Искренне желаю Вам и всей семье побольше радостных и теплых моментов вместе, желаю, чтобы мечты сбывались, а цели достигались быстро и легко. И, конечно, мирного неба над головой, чтобы мы всей большой дружной компанией встретились в Киеве! З днем народження!!"
   },
   {
-    from: 'Brother',
-    message: "Happy birthday to my awesome brother who taught me everything I know about persistence and hard work. You've always been my role model. Enjoy your special day, you deserve it!"
+    from: 'Аня',
+    message: "Дуже люблю тебе, тато! Бажаю найкращого дня народження цього року і всі наступні роки. Вірю в тебе і в твої завжди грандіозні плани і беру приклад!"
   },
   {
-    from: 'Grandma',
-    message: "My dearest grandson, watching you grow into the man you are today has been one of my greatest joys. Your kindness and strength remind me so much of your grandfather. Sending you all my love on your birthday."
+    from: 'Rafael',
+    message: "Alles Gute zum Älterwerden und bleib stabil"
   },
   {
-    from: 'Cousin Sarah',
-    message: "Happy birthday to my favorite cousin! Remember all those summer adventures we had as kids? Those are still some of my favorite memories. Hope your day is filled with as much fun as those summers were!"
+    from: 'Оля',
+    message: "Від себе хочеться побажати тобі ще не менш ніж 50 років такої енергії і бажання творити добро, якими ти сяєш сьогодні!"
   },
   {
-    from: 'Uncle Jim',
-    message: "Happy birthday, nephew! It's been a privilege watching you grow up into the man you've become. Your dedication to your family reminds me of your father. Wishing you continued success and happiness in the coming year."
+    from: 'Світлана Олексіївна',
+    message: "С Днем Рождения! благодарю как врача за помощь в любую минуту"
   },
   {
-    from: 'Aunt Mary',
-    message: "Happy birthday to my wonderful nephew! Your positivity and energy always light up the room. You've grown into such a thoughtful and caring person. Enjoy your special day!"
+    from: 'Інна',
+    message: "Саша, вся наша семья от мала  до велика поздравляет тебя ,любим тебя за все -за твою доброту,готовность всегда прийти на помощь,за мудрые советы ….."
   },
   {
-    from: 'Childhood Friend',
-    message: "We've been friends since we were little tykes, and I've watched you grow into an amazing father and husband. So proud to call you my friend. Happy birthday, buddy!"
+    from: 'Женя',
+    message: "З Днем народження! 🥳 Ти – людина великої мудрості, справедливості й доброти. Ти не просто найкращий у своїй справі, ти найкращий у всьому – як лікар, як друг, як чоловік. Я безмежно пишаюся тобою, твоїм талантом, твоїм серцем, твоєю здатністю дарувати людям щастя.Нехай у твоєму житті завжди буде світло, радість і гармонія. Нехай доля віддячує тобі за все добро, яке ти даруєш іншим. Я щаслива йти поруч із тобою♥️"
+  },
+  {
+    from: 'Сергей, Галина, Кирилл, Мария"',
+    message: "Поздравляем брата и дядю Сашу С Днём Рождения!Желаем жизнью наслаждаться,Почаще вместе собираться!В любви жены и деток искупаться,В признанье пациентов пребыватьИ никогда не унывать! От счастья только улыбатьсяИ много мирных светлых днейВ кругу семьи, родни, друзей!"
+  },
+  {
+    from: 'Кирилл',
+    message: "Happy Birthday Саша! Wish you the best birthday ever and hopefully this year brings you lots of adventures and checkmates!"
+  },
+  {
+    from: 'Стася',
+    message: "папа, с днем рождения тебя! желаю тебе здоровья, удачи, любви, и исполнения всех желаний. пусть каждый день приносит счастье и успех в любимом деле. спасибо за твою поддержку и мудрость! <3"
   }
 ];
 
@@ -368,9 +380,9 @@ const CardInside: React.FC<CardInsideProps> = ({ isVisible, onClose }) => {
       <CardInsideContent>
         <CardEdge />
         
-        <CardInsideTitle>Dad's Memory Album</CardInsideTitle>
+        <CardInsideTitle>Альбом для тата</CardInsideTitle>
         <NeuText style={{ textAlign: 'center', marginBottom: theme.spacing.sm }}>
-          Click on any photo to see birthday wishes!
+          Під фото ховаються привітання, нажми на фото щоб їх побачити!
         </NeuText>
         
         <AlbumGrid>

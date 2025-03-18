@@ -129,18 +129,18 @@ const Welcome: React.FC = () => {
         
         <motion.div variants={itemVariants}>
           <NeuText>
-            Welcome to your personalized birthday experience.
-            Before you can continue, you need to solve a little puzzle...
+            Тато, тобі дуже важко обирати подарунки)) Тому вітаю тебе у твоїй персональній веб листівці! 
+            Але для того щоб побачити твої привітання, ти маєш пройти декілька кроків...
           </NeuText>
         </motion.div>
 
         <motion.div variants={itemVariants}>
           <NeuCard style={{ padding: theme.spacing.md, marginTop: theme.spacing.md }}>
             <NeuText>
-              <strong>Enter the birth years of all your children from oldest to youngest</strong>
+              <strong>Аби довести що це справді ти, введи роки народження своїх дітей від старшого до молодшого</strong>
             </NeuText>
             <HintText>
-              Hint: Just the years, no spaces or separators (e.g., 19992001...)
+              Підказка: Тільки цифри, без пробілів або розділових знаків (наприклад, 19972001...)
             </HintText>
           </NeuCard>
         </motion.div>
@@ -155,7 +155,7 @@ const Welcome: React.FC = () => {
               >
                 <NeuInput
                   type="password"
-                  placeholder="Enter the years..."
+                  placeholder="Введи пароль..."
                   value={password}
                   onChange={(e) => {
                     // Only allow numbers
@@ -184,7 +184,7 @@ const Welcome: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <NeuPrimaryButton type="submit">
-              Unlock
+              Розблокувати
             </NeuPrimaryButton>
           </motion.div>
         </StyledForm>

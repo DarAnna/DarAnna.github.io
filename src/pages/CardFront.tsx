@@ -274,7 +274,7 @@ const CardFront: React.FC<CardFrontProps> = ({ isOpen, onOpen }) => {
             
             <motion.div variants={itemVariants}>
               <CardSubtitle>
-                To an amazing father, doctor, and inspiration.
+                Найкащому татові в цьому світі, любимо тебе!
               </CardSubtitle>
             </motion.div>
             
@@ -287,7 +287,7 @@ const CardFront: React.FC<CardFrontProps> = ({ isOpen, onOpen }) => {
             <motion.div variants={itemVariants}>
               <CardButtons>
                 <NeuPrimaryButton onClick={handleOpenCard}>
-                  Open Card
+                  Відкрити листівку
                 </NeuPrimaryButton>
               </CardButtons>
             </motion.div>
