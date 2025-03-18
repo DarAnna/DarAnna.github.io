@@ -98,7 +98,7 @@ const AlbumGrid = styled.div`
 
   @media (max-width: ${theme.breakpoints.mobile}) {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: ${theme.spacing.md};
+  gap: ${theme.spacing.md};
     margin-bottom: ${theme.spacing.xl}; /* Add more space at the bottom for mobile */
   }
 `;
@@ -367,8 +367,8 @@ const CardInside: React.FC<CardInsideProps> = ({ isVisible, onClose }) => {
   }, [isVisible, controls]);
   
   return (
-    <CardInsideContainer
-      initial="hidden"
+      <CardInsideContainer
+        initial="hidden"
       animate={controls}
       exit="hidden"
       variants={{
@@ -378,8 +378,8 @@ const CardInside: React.FC<CardInsideProps> = ({ isVisible, onClose }) => {
       style={{ display: isVisible ? 'flex' : 'none' }}
     >
       <CardInsideContent>
-        <CardEdge />
-        
+          <CardEdge />
+          
         <CardInsideTitle>Альбом для тата</CardInsideTitle>
         <NeuText style={{ textAlign: 'center', marginBottom: theme.spacing.sm }}>
           Під фото ховаються привітання, нажми на фото щоб їх побачити!
@@ -394,8 +394,8 @@ const CardInside: React.FC<CardInsideProps> = ({ isVisible, onClose }) => {
           style={{ margin: '0 auto', marginTop: theme.spacing.md }}
         >
           Return to Card
-        </NeuButton>
-      </CardInsideContent>
+            </NeuButton>
+        </CardInsideContent>
       
       <AnimatePresence>
         {selectedPhoto && currentWish && (
@@ -416,7 +416,7 @@ const CardInside: React.FC<CardInsideProps> = ({ isVisible, onClose }) => {
                 <WishModalImage src={selectedPhoto.src} alt={selectedPhoto.title} />
               </WishModalImageContainer>
               
-              <CloseButton onClick={closeModal} />
+            <CloseButton onClick={closeModal} />
               
               <WishModalFrom>From {currentWish.from}:</WishModalFrom>
               <WishModalMessage>{currentWish.message}</WishModalMessage>
