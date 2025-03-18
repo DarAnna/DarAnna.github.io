@@ -85,21 +85,6 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `;
 
-// Dev skip button
-const DevSkipButton = styled(NeuButton)`
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  padding: 8px 12px;
-  font-size: 0.8rem;
-  opacity: 0.6;
-  z-index: 100;
-  
-  &:hover {
-    opacity: 1;
-  }
-`;
-
 // Interfaces
 interface PuzzlePieceType {
   id: number;
@@ -191,12 +176,6 @@ const PhotoPuzzle: React.FC = () => {
     navigate('/journey');
   };
   
-  // Skip puzzle for development
-  const handleSkip = () => {
-    completePuzzle1();
-    navigate('/journey');
-  };
-  
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -229,11 +208,6 @@ const PhotoPuzzle: React.FC = () => {
         animate="visible"
         exit="exit"
       >
-        {/* Development skip button */}
-        <DevSkipButton onClick={handleSkip}>
-          Skip (Dev Only)
-        </DevSkipButton>
-        
         <motion.div variants={itemVariants}>
           <NeuHeading>Фотопазл</NeuHeading>
         </motion.div>

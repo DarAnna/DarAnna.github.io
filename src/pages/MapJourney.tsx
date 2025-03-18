@@ -127,21 +127,6 @@ const ButtonGroup = styled.div`
   }
 `;
 
-// Dev skip button
-const DevSkipButton = styled(NeuButton)`
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  padding: 8px 12px;
-  font-size: 0.8rem;
-  opacity: 0.6;
-  z-index: 100;
-  
-  &:hover {
-    opacity: 1;
-  }
-`;
-
 // Journey location interface
 interface JourneyLocation {
   id: string;
@@ -262,12 +247,6 @@ const MapJourney: React.FC = () => {
     navigate('/card');
   };
   
-  // Skip journey for development
-  const handleSkip = () => {
-    completePuzzle2();
-    navigate('/card');
-  };
-  
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -297,11 +276,6 @@ const MapJourney: React.FC = () => {
         animate="visible"
         exit="exit"
       >
-        {/* Development skip button */}
-        <DevSkipButton onClick={handleSkip}>
-          Skip (Dev Only)
-        </DevSkipButton>
-        
         <motion.div variants={itemVariants}>
           <NeuHeading>Подорож до сім'ї</NeuHeading>
         </motion.div>
